@@ -24,6 +24,27 @@ app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
+app.get('/api/:date', (req, res)=> {
+  
+  let input = req.params.date
+  // convert to unix (number)
+  let timestamp = !isNaN(new Date(input))? new Date(input).valueOf() : +input
+  console.log("TS", timestamp, input )
+  // Check if timestap is a number
+  if (isNaN(timestamp)) {
+    // NaN returns error to api  
+    return res.json({error: "Invalid Date"})
+  } else {
+    // If number return send result (object)
+    return res.json({unix: timestamp, utc: new Date(timestamp).toUTCString()})
+  }
+   
+})
+// If request is blank, send "now" as timestamp
+app.get('/api/', (req, res)=> {
+  res.send({unix: new Date().valueOf(), utc: new Date().toUTCString()})
+})
+
 
 
 // Listen on port set in environment variable or default to 3000
